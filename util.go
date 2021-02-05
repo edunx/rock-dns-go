@@ -6,13 +6,13 @@ import (
 
 func CheckDnsUserDataByTable(L *lua.LState , opt *lua.LTable , key string ) *Dns {
 	v := opt.RawGetString(key)
+    var obj *Dns
 
     ud , ok := v.(*lua.LUserData)
     if !ok { goto ERR }
 
-    v , ok := ud.Value.(*Dns)
-    if !ok { goto ERR } else { return v }
-
+    obj , ok = ud.Value.(*Dns)
+    if !ok { goto ERR } else { return obj }
 
 ERR:
     L.RaiseError("expect invalid type , must be *Dns")
@@ -21,9 +21,7 @@ ERR:
 
 func CheckDnsUserDataByIdx(L *lua.LState, idx int) *Dns {
 	ud := L.CheckUserData(idx)
-    if _  , ok := ud.Value.(*Dns) {
-        return ud.Value.(*Dns)
-    }
+    if  obj , ok := ud.Value.(*Dns) { return obj }
 
     L.RaiseError("expect invalid type , must be *Dns, got %T", v)
     return nil

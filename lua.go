@@ -2,7 +2,6 @@ package dns
 
 import (
 	"github.com/edunx/lua"
-	pub "github.com/edunx/rock-public-go"
 )
 
 const (
