@@ -2,6 +2,7 @@ package dns
 
 import (
 	"github.com/edunx/lua"
+    pub "github.com/edunx/rock-public-go"
 )
 
 func CheckDnsUserDataByTable(L *lua.LState , opt *lua.LTable , key string ) *Dns {
@@ -24,7 +25,7 @@ func CheckDnsUserDataByIdx(L *lua.LState, idx int) *Dns {
 	obj , ok := L.CheckUserData(idx).Value.(*Dns)
     if ok { return obj }
 
-    L.RaiseError("expect invalid type , must be *Dns, got %T", v)
+    L.RaiseError("expect invalid type , must be *Dns")
     return nil
 }
 
