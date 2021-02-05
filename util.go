@@ -5,7 +5,7 @@ import (
 )
 
 func CheckDnsUserDataByTable(L *lua.LState , opt *lua.LTable , key string ) *Dns {
-	v := tb.RawGetString(key)
+	v := opt.RawGetString(key)
 
     ud , ok := v.(*lua.LUserData)
     if !ok { goto ERR }
