@@ -21,8 +21,8 @@ ERR:
 }
 
 func CheckDnsUserDataByIdx(L *lua.LState, idx int) *Dns {
-	ud := L.CheckUserData(idx)
-    if  obj , ok := ud.Value.(*Dns) { return obj }
+	obj , ok := L.CheckUserData(idx).Value.(*Dns)
+    if ok { return obj }
 
     L.RaiseError("expect invalid type , must be *Dns, got %T", v)
     return nil
