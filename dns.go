@@ -1,6 +1,7 @@
 package dns
 
 import (
+	"errors"
 	"github.com/miekg/dns"
 	"sync"
 	"time"
@@ -18,22 +19,25 @@ func (d *Dns) Start() error {
 		Timeout: time.Duration( d.C.timeout ) * time.Second,
 	}
 
-	return nil
+	switch d.C.typeName {
+	case "A" , "CNAME":
+		return nil
+	default:
+		return errors.New("not found dns type name")
+	}
 }
 
 func (d *Dns) Close() {
 
 }
 
-func (d *Dns) Query(host string, e *error) ([]string , int) {
-
+func (d *Dns) Query(host string ) ([]string , int , error) {
 	m := d.msgs.Get().(*dns.Msg)
 	m.SetQuestion(host , dns.TypeA)
 
 	r , _ , err := d.client.Exchange(m , d.C.nameserver)
 	if err != nil {
-		*e = err
-		return nil , 0
+		return nil , 0 , err
 	}
 
 	rlen := len(r.Answer)
@@ -44,7 +48,7 @@ func (d *Dns) Query(host string, e *error) ([]string , int) {
 	for i := 0 ; i < rlen ; i++ {
 		ans = r.Answer[i]
 
-		switch d.C.TypeName  {
+		switch d.C.typeName  {
 		case "A":
 			record , t := ans.(*dns.A)
 			if t {
@@ -63,6 +67,6 @@ func (d *Dns) Query(host string, e *error) ([]string , int) {
 	}
 
 	d.msgs.Put(m)
-	return rc[:size] , size
+	return rc[:size] , size , nil
 }
 

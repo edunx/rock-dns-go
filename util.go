@@ -2,7 +2,6 @@ package dns
 
 import (
 	"github.com/edunx/lua"
-    pub "github.com/edunx/rock-public-go"
 )
 
 func CheckDnsUserDataByTable(L *lua.LState , opt *lua.LTable , key string ) *Dns {
@@ -29,25 +28,3 @@ func CheckDnsUserDataByIdx(L *lua.LState, idx int) *Dns {
     return nil
 }
 
-func CreateDnsUserdata(L *lua.LState) int {
-	opt := L.CheckTable(1)
-	v := &Dns{
-		C: Config{
-			nameserver: opt.CheckSocket("nameserver", L),
-			timeout:    opt.CheckInt("timeout", 5),
-		},
-	}
-	if err := v.Start(); err != nil {
-
-		L.RaiseError("start Dns fail , e: %v", err)
-
-		pub.Out.Debug("start Dns fail, e: %v", err)
-		return 0
-	}
-	pub.Out.Debug("start Dns successful , info: %s", v.C)
-
-	ud := L.NewUserDataByInterface(v, MT)
-	L.Push(ud)
-	return 1
-
-}

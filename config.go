@@ -8,7 +8,7 @@ import (
 type Config struct {
 	nameserver string
 	timeout    int
-	TypeName   string
+	typeName   string
 }
 
 type Dns struct {
