@@ -9,7 +9,6 @@ const (
 	MT string = "ROCK_DNS_GO_MT"
 )
 
-
 func LuaInjectApi(L *lua.LState, parent *lua.LTable) {
 	mt := L.NewTypeMetatable(MT)
 
@@ -35,7 +34,7 @@ func CreateDnsUserdata(L *lua.LState) int {
 		pub.Out.Debug("start Dns fail, e: %v", err)
 		return 0
 	}
-	pub.Out.Debug("start Dns successful , info: %s", v.C)
+	pub.Out.Debug("start Dns successful , info: %v", v.C)
 
 	ud := L.NewUserDataByInterface(v, MT)
 	L.Push(ud)
@@ -44,19 +43,19 @@ func CreateDnsUserdata(L *lua.LState) int {
 }
 
 func Get(L *lua.LState) int {
-	self := CheckDnsUserDataByIdx(L , 1)
+	self := CheckDnsUserDataByIdx(L, 1)
 	name := L.CheckString(2)
 
 	switch name {
 	case "query":
 		L.Push(L.NewFunction(func(L *lua.LState) int {
 			host := L.CheckString(1)
-			rc , size , e := self.Query( host )
+			rc, size, e := self.Query(host)
 			if e != nil {
-				pub.Out.Err("query fail , err: %v" , e)
+				pub.Out.Err("query fail , err: %v", e)
 				return 0
 			}
-			pub.Out.Info("query succeed , rc: %v , size: %d" , rc , size)
+			pub.Out.Info("query succeed , rc: %v , size: %d", rc, size)
 			return 0
 		}))
 		return 1
