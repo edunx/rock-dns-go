@@ -7,19 +7,19 @@ import (
 	"time"
 )
 
-func (d *Dns) Start() error {
+func (c *Client) Start() error {
 
-	d.msgs = &sync.Pool{
+	c.msgs = &sync.Pool{
 		New: func() interface{} {
 			return &dns.Msg{}
 		},
 	}
 
-	d.client = &dns.Client{
-		Timeout: time.Duration(d.C.timeout) * time.Second,
+	c.obj = &dns.Client{
+		Timeout: time.Duration(c.C.timeout) * time.Second,
 	}
 
-	switch d.C.typeName {
+	switch c.C.typeName {
 	case "A", "CNAME":
 		return nil
 	default:
@@ -27,15 +27,15 @@ func (d *Dns) Start() error {
 	}
 }
 
-func (d *Dns) Close() {
+func (c *Client) Close() {
 
 }
 
-func (d *Dns) Query(host string) ([]string, int, error) {
-	m := d.msgs.Get().(*dns.Msg)
+func (c *Client) Query(host string) ([]string, int, error) {
+	m := c.msgs.Get().(*dns.Msg)
 	m.SetQuestion(host, dns.TypeA)
 
-	r, _, err := d.client.Exchange(m, d.C.nameserver)
+	r, _, err := c.obj.Exchange(m, c.C.nameserver)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -48,7 +48,7 @@ func (d *Dns) Query(host string) ([]string, int, error) {
 	for i := 0; i < rlen; i++ {
 		ans = r.Answer[i]
 
-		switch d.C.typeName {
+		switch c.C.typeName {
 		case "A":
 			record, t := ans.(*dns.A)
 			if t {
@@ -66,6 +66,6 @@ func (d *Dns) Query(host string) ([]string, int, error) {
 
 	}
 
-	d.msgs.Put(m)
+	c.msgs.Put(m)
 	return rc[:size], size, nil
 }

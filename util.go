@@ -4,8 +4,8 @@ import (
 	"github.com/edunx/lua"
 )
 
-func CheckDnsUserDataByTable(L *lua.LState, opt *lua.LTable, key string) *Dns {
-	var obj *Dns
+func CheckDnsClientUserDataByTable(L *lua.LState, opt *lua.LTable, key string) *Client {
+	var obj *Client
 	var ud *lua.LUserData
 	var ok bool
 
@@ -14,7 +14,7 @@ func CheckDnsUserDataByTable(L *lua.LState, opt *lua.LTable, key string) *Dns {
 		goto ERR
 	}
 
-	obj, ok = ud.Value.(*Dns)
+	obj, ok = ud.Value.(*Client)
 	if !ok {
 		goto ERR
 	} else {
@@ -22,16 +22,16 @@ func CheckDnsUserDataByTable(L *lua.LState, opt *lua.LTable, key string) *Dns {
 	}
 
 ERR:
-	L.RaiseError("expect invalid type , must be *Dns")
+	L.RaiseError("expect invalid type , must be *DnsClient")
 	return nil
 }
 
-func CheckDnsUserDataByIdx(L *lua.LState, idx int) *Dns {
-	obj, ok := L.CheckUserData(idx).Value.(*Dns)
+func CheckDnsClientUserDataByIdx(L *lua.LState, idx int) *Client {
+	obj, ok := L.CheckUserData(idx).Value.(*Client)
 	if ok {
 		return obj
 	}
 
-	L.RaiseError("expect invalid type , must be *Dns")
+	L.RaiseError("expect invalid type , must be *DnsClient")
 	return nil
 }

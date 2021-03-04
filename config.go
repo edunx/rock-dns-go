@@ -11,11 +11,11 @@ type Config struct {
 	typeName   string
 }
 
-type Dns struct {
+type Client struct {
 	C Config
 
-	client *dns.Client
-	msgs   *sync.Pool
+	obj  *dns.Client
+	msgs *sync.Pool
 }
 
 type Look interface {
