@@ -4,7 +4,7 @@
 
 # 配置
 ```lua
-    local dns = rock.dns{
+    local dns = rock.dns.client{
         nameserver = "114.114.114.114:53",
         timeout = 5,
         type_name = "CNAME",
